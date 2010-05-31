@@ -17,11 +17,11 @@
     $pageid  = optional_param('pageid', NULL, PARAM_INT);   // Lesson Page ID
     $edit    = optional_param('edit', -1, PARAM_BOOL);
     $userpassword = optional_param('userpassword','',PARAM_CLEAN);
-    
+
     list($cm, $course, $lesson) = lesson_get_basics($id);
 
     require_login($course->id, false, $cm);
-    
+
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
 /// Check these for students only TODO: Find a better method for doing this!
@@ -38,7 +38,7 @@
             } else {
                 $message = get_string('lessonopen', 'lesson', userdate($lesson->available));
             }
-            
+
             lesson_print_header($cm, $course, $lesson);
             print_simple_box_start('center');
             echo '<div style="text-align:center;">';
@@ -48,7 +48,7 @@
             print_simple_box_end();
             print_footer($course);
             exit();
-        
+
         } else if ($lesson->usepassword and empty($USER->lessonloggedin[$lesson->id])) { // Password protected lesson code
             $correctpass = false;
             if (!empty($userpassword)) {
@@ -85,10 +85,10 @@
                 print_footer($course);
                 exit();
             }
-        
+
         } else if ($lesson->dependency) { // check for dependencies
             if ($dependentlesson = get_record('lesson', 'id', $lesson->dependency)) {
-                // lesson exists, so we can proceed            
+                // lesson exists, so we can proceed
                 $conditions = unserialize($lesson->conditions);
                 // assume false for all
                 $timespent = false;
@@ -104,7 +104,7 @@
                                 $timespent = true;
                             }
                         }
-                    } 
+                    }
                 } else {
                     $timespent = true; // there isn't one set
                 }
@@ -153,15 +153,15 @@
                     echo '</p>';
                     print_footer($course);
                     exit();
-                } 
+                }
             }
-    
+
         } else if ($lesson->highscores and !$lesson->practice and !optional_param('viewed', 0) and empty($pageid)) {
             // Display high scores before starting lesson
             redirect("$CFG->wwwroot/mod/lesson/highscores.php?id=$cm->id");
         }
     }
-    
+
     // set up some general variables
     $path = $CFG->wwwroot .'/course';
 
@@ -169,7 +169,7 @@
     if($pageid == LESSON_UNSEENBRANCHPAGE) {
         $pageid = lesson_unseen_question_jump($lesson->id, $USER->id, $pageid);
     }
-    
+
     // display individual pages and their sets of answers
     // if pageid is EOL then the end of the lesson has been reached
            // for flow, changed to simple echo for flow styles, michaelp, moved lesson name and page title down
@@ -187,9 +187,9 @@
                 }
             }
         }
-        
+
         add_to_log($course->id, 'lesson', 'start', 'view.php?id='. $cm->id, $lesson->id, $cm->id);
-        
+
         // if no pageid given see if the lesson has been started
         if ($grades = get_records_select('lesson_grades', 'lessonid = '. $lesson->id .' AND userid = '. $USER->id,
                     'grade DESC')) {
@@ -200,23 +200,23 @@
         if ($retries) {
             $attemptflag = true;
         }
-        
-        if (isset($USER->modattempts[$lesson->id])) { 
+
+        if (isset($USER->modattempts[$lesson->id])) {
             unset($USER->modattempts[$lesson->id]);  // if no pageid, then student is NOT reviewing
         }
-        
+
         // if there are any questions have been answered correctly in this attempt
-        if ($attempts = get_records_select('lesson_attempts', 
-                    "lessonid = $lesson->id AND userid = $USER->id AND retry = $retries AND 
+        if ($attempts = get_records_select('lesson_attempts',
+                    "lessonid = $lesson->id AND userid = $USER->id AND retry = $retries AND
                     correct = 1", 'timeseen DESC')) {
-            
+
             foreach ($attempts as $attempt) {
                 $jumpto = get_field('lesson_answers', 'jumpto', 'id', $attempt->answerid);
                 // convert the jumpto to a proper page id
                 if ($jumpto == 0) { // unlikely value!
                     $lastpageseen = $attempt->pageid;
                 } elseif ($jumpto == LESSON_NEXTPAGE) {
-                    if (!$lastpageseen = get_field('lesson_pages', 'nextpageid', 'id', 
+                    if (!$lastpageseen = get_field('lesson_pages', 'nextpageid', 'id',
                                 $attempt->pageid)) {
                         // no nextpage go to end of lesson
                         $lastpageseen = LESSON_EOL;
@@ -224,13 +224,13 @@
                 } else {
                     $lastpageseen = $jumpto;
                 }
-                break; // only look at the latest correct attempt 
+                break; // only look at the latest correct attempt
             }
         } else {
             $attempts = NULL;
         }
 
-        if ($branchtables = get_records_select('lesson_branch', 
+        if ($branchtables = get_records_select('lesson_branch',
                             "lessonid = $lesson->id AND userid = $USER->id AND retry = $retries", 'timeseen DESC')) {
             // in here, user has viewed a branch table
             $lastbranchtable = current($branchtables);
@@ -269,11 +269,11 @@
                     echo '</div>';
                     print_simple_box_end();
                 }
-                
+
             } else {
                 print_simple_box("<p style=\"text-align:center;\">".get_string('youhaveseen','lesson').'</p>',
                         "center");
-                
+
                 echo '<div style="text-align:center;">';
                 echo '<span class="lessonbutton standardbutton">'.
                         '<a href="view.php?id='.$cm->id.'&amp;pageid='.$lastpageseen.'&amp;startlastseen=yes">'.
@@ -286,7 +286,7 @@
             print_footer($course);
             exit();
         }
-        
+
         if ($grades) {
             foreach ($grades as $grade) {
                 $bestgrade = $grade->grade;
@@ -321,7 +321,7 @@
             $startlesson->userid = $USER->id;
             $startlesson->starttime = time();
             $startlesson->lessontime = time();
-            
+
             if (!insert_record('lesson_timer', $startlesson)) {
                 error('Error: could not insert row into lesson_timer table');
             }
@@ -348,9 +348,9 @@
                 }
             }
         }
-        
+
         add_to_log($course->id, 'lesson', 'view', 'view.php?id='. $cm->id, $pageid, $cm->id);
-        
+
         if (!$page = get_record('lesson_pages', 'id', $pageid)) {
             error('Navigation: the page record not found');
         }
@@ -389,14 +389,14 @@
                         if (!has_capability('mod/lesson:manage', $context)) {
                             $answer->jumpto = lesson_cluster_jump($lesson->id, $USER->id, $pageid);
                         } else {
-                            if ($page->nextpageid == 0) {  
+                            if ($page->nextpageid == 0) {
                                 $answer->jumpto = LESSON_EOL;
                             } else {
                                 $answer->jumpto = $page->nextpageid;
                             }
                         }
                     } else if ($answer->jumpto == LESSON_NEXTPAGE) {
-                        if ($page->nextpageid == 0) {  
+                        if ($page->nextpageid == 0) {
                             $answer->jumpto = LESSON_EOL;
                         } else {
                             $answer->jumpto = $page->nextpageid;
@@ -404,24 +404,24 @@
                     } else if ($answer->jumpto == 0) {
                         $answer->jumpto = $page->id;
                     } else if ($answer->jumpto == LESSON_PREVIOUSPAGE) {
-                        $answer->jumpto = $page->prevpageid;                            
+                        $answer->jumpto = $page->prevpageid;
                     }
                     redirect("$CFG->wwwroot/mod/lesson/view.php?id=$cm->id&amp;pageid=$answer->jumpto");
                     break;
-                } 
+                }
             } else {
                 error('Navigation: No answers on EOB');
             }
         }
-        
+
         // check to see if the user can see the left menu
         if (!has_capability('mod/lesson:manage', $context)) {
             $lesson->displayleft = lesson_displayleftif($lesson);
         }
-        
+
         // This is where several messages (usually warnings) are displayed
         // all of this is displayed above the actual page
-        
+
         // clock code
         // get time information for this user
         $timer = new stdClass;
@@ -442,7 +442,7 @@
             $timer->starttime = time();
             $timer->lessontime = time();
         }
-            
+
         // for timed lessons, display clock
         if ($lesson->timed) {
             if(has_capability('mod/lesson:manage', $context)) {
@@ -478,14 +478,14 @@
                 lesson_set_message(get_string('teacherjumpwarning', 'lesson', $warningvars));
             }
         }
-        
+
         if ($page->qtype == LESSON_BRANCHTABLE) {
             if ($lesson->minquestions and !has_capability('mod/lesson:manage', $context)) {
                 // tell student how many questions they have seen, how many are required and their grade
                 $ntries = count_records("lesson_grades", "lessonid", $lesson->id, "userid", $USER->id);
-                
+
                 $gradeinfo = lesson_grade($lesson, $ntries);
-                
+
                 if ($gradeinfo->attempts) {
                     if ($gradeinfo->nquestions < $lesson->minquestions) {
                         $a = new stdClass;
@@ -527,13 +527,13 @@
 
         require($CFG->dirroot.'/mod/lesson/viewstart.html');
 
-        // now starting to print the page's contents   
+        // now starting to print the page's contents
         if ($page->qtype == LESSON_BRANCHTABLE) {
             print_heading(format_string($page->title));
         } else {
             $lesson->slideshow = false; // turn off slide show for all pages other than LESSON_BRANTCHTABLE
         }
-        
+
         if (!$lesson->slideshow) {
             $options = new stdClass;
             $options->noclean = true;
@@ -541,10 +541,10 @@
                             format_text($page->contents, FORMAT_MOODLE, $options).
                             '</div>', 'center');
         }
-        
+
         // this is for modattempts option.  Find the users previous answer to this page,
         //   and then display it below in answer processing
-        if (isset($USER->modattempts[$lesson->id])) {            
+        if (isset($USER->modattempts[$lesson->id])) {
             $retries = count_records('lesson_grades', "lessonid", $lesson->id, "userid", $USER->id);
             $retries--;
             if (! $attempts = get_records_select("lesson_attempts", "lessonid = $lesson->id AND userid = $USER->id AND pageid = $page->id AND retry = $retries", "timeseen")) {
@@ -552,7 +552,7 @@
             }
             $attempt = end($attempts);
         }
-        
+
         // get the answers in a set order, the id order
         if ($answers = get_records("lesson_answers", "pageid", $page->id, "id")) {
             if ($page->qtype != LESSON_BRANCHTABLE) {  // To fix XHTML problem (BT have their own forms)
@@ -573,11 +573,11 @@
             switch ($page->qtype) {
                 case LESSON_SHORTANSWER :
                 case LESSON_NUMERICAL :
-                    if (isset($USER->modattempts[$lesson->id])) {     
+                    if (isset($USER->modattempts[$lesson->id])) {
                         $value = 'value="'.s($attempt->useranswer).'"';
                     } else {
                         $value = "";
-                    }       
+                    }
                     echo '<tr><td style="text-align:center;"><label for="answer">'.get_string('youranswer', 'lesson').'</label>'.
                         ": <input type=\"text\" id=\"answer\" name=\"answer\" size=\"50\" maxlength=\"200\" $value />\n";
                     echo '</td></tr></table>';
@@ -593,13 +593,13 @@
                             $checked = 'checked="checked"';
                         } else {
                             $checked = '';
-                        } 
+                        }
                         echo "<input type=\"radio\" id=\"answerid$i\" name=\"answerid\" value=\"{$answer->id}\" $checked />";
                         echo "</td><td>";
                         echo "<label for=\"answerid$i\">".format_text(trim($answer->answer), FORMAT_MOODLE, $options).'</label>';
                         echo '</td></tr>';
                         if ($answer != end($answers)) {
-                            echo "<tr><td><br /></td></tr>";                            
+                            echo "<tr><td><br /></td></tr>";
                         }
                         $i++;
                     }
@@ -612,7 +612,7 @@
                     shuffle($answers);
 
                     foreach ($answers as $answer) {
-                        echo '<tr><td valign="top">';
+                        echo '<tr><td class="checkbox" valign="top">';
                         if ($page->qoption) {
                             $checked = '';
                             if (isset($USER->modattempts[$lesson->id])) {
@@ -623,23 +623,23 @@
                                     $checked = '';
                                 }
                             }
-                            // more than one answer allowed 
+                            // more than one answer allowed
                             echo "<input type=\"checkbox\" id=\"answerid$i\" name=\"answer[$i]\" value=\"{$answer->id}\"$checked />";
                         } else {
                             if (isset($USER->modattempts[$lesson->id]) && $answer->id == $attempt->answerid) {
                                 $checked = ' checked="checked"';
                             } else {
                                 $checked = '';
-                            } 
+                            }
                             // only one answer allowed
                             echo "<input type=\"radio\" id=\"answerid$i\" name=\"answerid\" value=\"{$answer->id}\"$checked />";
                         }
-                        echo '</td><td>';
-                        echo "<label for=\"answerid$i\" >".format_text(trim($answer->answer), FORMAT_MOODLE, $options).'</label>'; 
+                        echo '</td><td class="answer">';
+                        echo "<label for=\"answerid$i\" >".format_text(trim($answer->answer), FORMAT_MOODLE, $options).'</label>';
                         echo '</td></tr>';
                         if ($answer != end($answers)) {
                             echo '<tr><td><br /></td></tr>';
-                        } 
+                        }
                         $i++;
                     }
                     echo '</table>';
@@ -651,7 +651,7 @@
                     }
                     lesson_print_submit_link($linkname, 'answerform');
                     break;
-                    
+
                 case LESSON_MATCHING :
                     // don't suffle answers (could be an option??)
                     foreach ($answers as $answer) {
@@ -660,11 +660,11 @@
                             $responses[] = trim($answer->response);
                         }
                     }
-                    
+
                     $responseoptions = array();
                     if (!empty($responses)) {
                         shuffle($responses);
-                        $responses = array_unique($responses);                     
+                        $responses = array_unique($responses);
                         foreach ($responses as $response) {
                             $responseoptions[htmlspecialchars(trim($response))] = $response;
                         }
@@ -690,14 +690,14 @@
                             echo '</td></tr>';
                             if ($answer != end($answers)) {
                                 echo '<tr><td><br /></td></tr>';
-                            } 
+                            }
                         }
                     }
                     echo '</table>';
                     print_simple_box_end();
                     lesson_print_submit_link(get_string('pleasematchtheabovepairs', 'lesson'), 'answerform');
                     break;
-                case LESSON_BRANCHTABLE :                  
+                case LESSON_BRANCHTABLE :
                     $options = new stdClass;
                     $options->para = false;
                     $buttons = array();
@@ -714,22 +714,22 @@
                                    lesson_print_submit_link(strip_tags(format_text($answer->answer, FORMAT_MOODLE, $options)), "answerform$i", '', '', '', '', true).
                                    '</div>'.
                                    '</form>';
-                        
+
                         $buttons[] = $button;
                         $i++;
                     }
-                    
+
                 /// Set the orientation
                     if ($page->layout) {
                         $orientation = 'horizontal';
                     } else {
                         $orientation = 'vertical';
                     }
-                    
+
                     $fullbuttonhtml = "\n<div class=\"branchbuttoncontainer $orientation\">\n" .
                                       implode("\n", $buttons).
                                       "\n</div>\n";
-                
+
                     if ($lesson->slideshow) {
                         $options = new stdClass;
                         $options->noclean = true;
@@ -739,7 +739,7 @@
                     } else {
                         echo $fullbuttonhtml;
                     }
-                    
+
                     break;
                 case LESSON_ESSAY :
                     if (isset($USER->modattempts[$lesson->id])) {
@@ -761,7 +761,7 @@
             }
             if ($page->qtype != LESSON_BRANCHTABLE) {  // To fix XHTML problem (BT have their own forms)
                 echo '</fieldset>';
-                echo "</form>\n"; 
+                echo "</form>\n";
             }
         } else {
             // a page without answers - find the next (logical) page
@@ -771,14 +771,14 @@
             if ($lesson->nextpagedefault) {
                 // in Flash Card mode...
                 // ...first get number of retakes
-                $nretakes = count_records("lesson_grades", "lessonid", $lesson->id, "userid", $USER->id); 
+                $nretakes = count_records("lesson_grades", "lessonid", $lesson->id, "userid", $USER->id);
                 // ...then get the page ids (lessonid the 5th param is needed to make get_records play)
                 $allpages = get_records("lesson_pages", "lessonid", $lesson->id, "id", "id,lessonid");
                 shuffle ($allpages);
                 $found = false;
                 if ($lesson->nextpagedefault == LESSON_UNSEENPAGE) {
                     foreach ($allpages as $thispage) {
-                        if (!count_records("lesson_attempts", "pageid", $thispage->id, "userid", 
+                        if (!count_records("lesson_attempts", "pageid", $thispage->id, "userid",
                                     $USER->id, "retry", $nretakes)) {
                             $found = true;
                             break;
@@ -817,13 +817,13 @@
             echo '</div>';
             echo "</form>\n";
         }
-        
+
         // Finish of the page
         lesson_print_progress_bar($lesson, $course);
         require($CFG->dirroot.'/mod/lesson/viewend.html');
     } else {
         // end of lesson reached work out grade
-        
+
         // Used to check to see if the student ran out of time
         $outoftime = optional_param('outoftime', '', PARAM_ALPHA);
 
@@ -836,14 +836,14 @@
                 $timer = array_pop($timer); // this will get the latest start time record
             }
             $timer->lessontime = time();
-            
+
             if (!update_record("lesson_timer", $timer)) {
                 error("Error: could not update lesson_timer table");
             }
         }
-        
+
         add_to_log($course->id, "lesson", "end", "view.php?id=$cm->id", "$lesson->id", $cm->id);
-        
+
         lesson_print_header($cm, $course, $lesson, 'view');
         print_heading(get_string("congratulations", "lesson"));
         print_simple_box_start("center");
@@ -852,9 +852,9 @@
             $ntries--;  // need to look at the old attempts :)
         }
         if (!has_capability('mod/lesson:manage', $context)) {
-            
+
             $gradeinfo = lesson_grade($lesson, $ntries);
-            
+
             if ($gradeinfo->attempts) {
                 if (!$lesson->custom) {
                     echo "<p style=\"text-align:center;\">".get_string("numberofpagesviewed", "lesson", $gradeinfo->nquestions).
@@ -862,7 +862,7 @@
                     if ($lesson->minquestions) {
                         if ($gradeinfo->nquestions < $lesson->minquestions) {
                             // print a warning and set nviewed to minquestions
-                            echo "<p style=\"text-align:center;\">".get_string("youshouldview", "lesson", 
+                            echo "<p style=\"text-align:center;\">".get_string("youshouldview", "lesson",
                                     $lesson->minquestions)."</p>\n";
                         }
                     }
@@ -877,13 +877,13 @@
                     $a->essayquestions = $gradeinfo->nmanual;
                     echo "<div style=\"text-align:center;\">".get_string("displayscorewithessays", "lesson", $a)."</div>";
                 } else {
-                    echo "<div style=\"text-align:center;\">".get_string("displayscorewithoutessays", "lesson", $a)."</div>";                        
+                    echo "<div style=\"text-align:center;\">".get_string("displayscorewithoutessays", "lesson", $a)."</div>";
                 }
                 $a = new stdClass;
                 $a->grade = number_format($gradeinfo->grade * $lesson->grade / 100, 1);
                 $a->total = $lesson->grade;
                 echo "<p style=\"text-align:center;\">".get_string('yourcurrentgradeisoutof', 'lesson', $a)."</p>\n";
-                    
+
                 $grade->lessonid = $lesson->id;
                 $grade->userid = $USER->id;
                 $grade->grade = $gradeinfo->grade;
@@ -931,7 +931,7 @@
             // update central gradebook
             lesson_update_grades($lesson, $USER->id);
 
-        } else { 
+        } else {
             // display for teacher
             echo "<p style=\"text-align:center;\">".get_string("displayofgrade", "lesson")."</p>\n";
         }
@@ -960,7 +960,7 @@
                     // sort to find the lowest score
                     sort($topscores);
                     $lowscore = $topscores[0];
-                    
+
                     if ($gradeinfo->grade >= $lowscore || count($uniquescores) <= $lesson->maxhighscores) {
                         $madeit = true;
                     }
@@ -983,7 +983,7 @@
                 }
             }
             echo "<br /><div style=\"padding: 5px;\" class=\"lessonbutton standardbutton\"><a href=\"$CFG->wwwroot/mod/lesson/highscores.php?id=$cm->id&amp;link=1\">".get_string("viewhighscores", "lesson").'</a></div>';
-            echo "</div>";                            
+            echo "</div>";
         }
 
         if ($lesson->modattempts && !has_capability('mod/lesson:manage', $context)) {
@@ -1000,11 +1000,11 @@
             // sure that the student can leave the lesson via pushing the continue button.
             $lastattempt = end($attempts);
             $USER->modattempts[$lesson->id] = $lastattempt->pageid;
-            echo "<div style=\"text-align:center; padding:5px;\" class=\"lessonbutton standardbutton\"><a href=\"view.php?id=$cm->id&amp;pageid=$pageid\">".get_string("reviewlesson", "lesson")."</a></div>\n"; 
+            echo "<div style=\"text-align:center; padding:5px;\" class=\"lessonbutton standardbutton\"><a href=\"view.php?id=$cm->id&amp;pageid=$pageid\">".get_string("reviewlesson", "lesson")."</a></div>\n";
         } elseif ($lesson->modattempts && has_capability('mod/lesson:manage', $context)) {
-            echo "<p style=\"text-align:center;\">".get_string("modattemptsnoteacher", "lesson")."</p>";                
+            echo "<p style=\"text-align:center;\">".get_string("modattemptsnoteacher", "lesson")."</p>";
         }
-        
+
         if ($lesson->activitylink) {
             if ($module = get_record('course_modules', 'id', $lesson->activitylink)) {
                 if ($modname = get_field('modules', 'name', 'id', $module->module))

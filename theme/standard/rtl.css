@@ -495,10 +495,25 @@ background-color:#DDE0FC; /* makes the table's Header line more clear */
 margin-right:5px !important;
 }
 
-/* must fill fields attention message - emphsize */
+/* must fill fields attention message - emphasize */
 form.mform .fdescription.required {
 background-color:gainsboro;
 font-weight:bold;
 padding:2px;
 text-align:center;
+}
+
+/* assignment submission table */
+#mod-assignment-submissions .timemodified,
+#mod-assignment-submissions .timemarked,
+#mod-assignment-submissions .fullname {
+text-align:right;
+}
+
+/* mod lesson : align LESSON_MULTICHOICE bottom questions */
+#mod-lesson-view td.answer {
+text-align:right;
+}
+#mod-lesson-view td.checkbox {
+text-align:left;
 }
