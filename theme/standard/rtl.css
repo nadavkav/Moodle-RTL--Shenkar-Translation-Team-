@@ -473,3 +473,8 @@ text-align:right;
 float:right;
 }
 
+.mform div.fhtmleditor {
+clear:none;
+float:right !important;
+}
+
