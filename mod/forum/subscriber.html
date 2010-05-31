@@ -27,13 +27,14 @@
 
           </select></td>
 <?php
-if (right_to_left()) {
-$addarrow = "&rarr;";
-$removearrow = "&larr;";
-} else {
-$addarrow = "&larr;";
-$removearrow = "&rarr;";
-}
+    // rtl/ltr arrows switching support
+    if (right_to_left()) {
+        $addarrow = "&rarr;";
+        $removearrow = "&larr;";
+    } else {
+        $addarrow = "&larr;";
+        $removearrow = "&rarr;";
+    }
 ?>
       <td valign="top">
         <br />

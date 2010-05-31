@@ -18,19 +18,28 @@
                   onFocus="getElementById('subscriberform').add.disabled=true;
                            getElementById('subscriberform').remove.disabled=false;
                            getElementById('subscriberform').addselect.selectedIndex=-1;">
-          <?php 
+          <?php
               foreach ($subscribers as $subscriber) {
                   $fullname = fullname($subscriber, true);
                   echo "<option value=\"$subscriber->id\">".$fullname.", ".$subscriber->email."</option>\n";
               }
           ?>
-          
+
           </select></td>
+<?php
+if (right_to_left()) {
+$addarrow = "&rarr;";
+$removearrow = "&larr;";
+} else {
+$addarrow = "&larr;";
+$removearrow = "&rarr;";
+}
+?>
       <td valign="top">
         <br />
-        <input name="add" type="submit" id="add" value="&larr;" />
+        <input name="add" type="submit" id="add" value="<?php echo $addarrow ?>" />
         <br />
-        <input name="remove" type="submit" id="remove" value="&rarr;" />
+        <input name="remove" type="submit" id="remove" value="<?php echo $removearrow ?>" />
         <br />
       </td>
       <td valign="top">
