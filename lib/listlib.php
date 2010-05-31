@@ -564,6 +564,13 @@ class list_item {
         $strmoveleft = get_string('maketoplevelitem', 'question');
         $pixpath = $CFG->pixpath;
 
+        if (right_to_left()) { // handle correct display of arrows according to rtl/ltr mode
+            $rightarrow="left";
+            $leftarrow="right";
+        } else {
+            $rightarrow="right";
+            $leftarrow="left";
+        }
         if (isset($this->parentlist->parentitem)) {
             $parentitem =& $this->parentlist->parentitem;
             if (isset($parentitem->parentlist->parentitem)) {
@@ -571,7 +578,7 @@ class list_item {
             } else {
                 $action = $strmoveleft;
             }
-            $this->icons['left'] = $this->image_icon($action, $this->parentlist->pageurl->out_action(array('left'=>$this->id)), 'left');
+            $this->icons['left'] = $this->image_icon($action, $this->parentlist->pageurl->out_action(array('left'=>$this->id)), $leftarrow);
         } else {
             $this->icons['left'] =  $this->image_spacer();
         }
@@ -590,7 +597,7 @@ class list_item {
 
         if (!empty($lastitem)) {
             $makechildof = get_string('makechildof', 'question', $lastitem->name);
-            $this->icons['right'] = $this->image_icon($makechildof, $this->parentlist->pageurl->out_action(array('right'=>$this->id)), 'right');
+            $this->icons['right'] = $this->image_icon($makechildof, $this->parentlist->pageurl->out_action(array('right'=>$this->id)), $rightarrow);
         } else {
             $this->icons['right'] =  $this->image_spacer();
         }
