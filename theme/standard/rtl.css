@@ -489,3 +489,16 @@ th.header, td.header, div.header {
 text-align:center;
 background-color:#DDE0FC; /* makes the table's Header line more clear */
 }
+
+/*  question bank :: import / exports layout fixes */
+#question-export form.mform input,#question-import form.mform input {
+margin-right:5px !important;
+}
+
+/* must fill fields attention message - emphsize */
+form.mform .fdescription.required {
+background-color:gainsboro;
+font-weight:bold;
+padding:2px;
+text-align:center;
+}
