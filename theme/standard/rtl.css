@@ -485,3 +485,7 @@ text-align:left;
 width:7em;
 }
 
+th.header, td.header, div.header {
+text-align:center;
+background-color:#DDE0FC; /* makes the table's Header line more clear */
+}
