@@ -478,3 +478,10 @@ clear:none;
 float:right !important;
 }
 
+.block_login .loginform div {
+text-align:left;
+}
+.block_login .loginform .fld input {
+width:7em;
+}
+
