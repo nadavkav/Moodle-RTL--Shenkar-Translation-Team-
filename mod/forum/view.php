@@ -232,7 +232,7 @@
             $canrate     = has_capability('mod/forum:rate', $context);
             $displaymode = get_user_preferences("forum_displaymode", $CFG->forum_displaymode);
 
-            echo '&nbsp;'; // this should fix the floating in FF
+            echo '&nbsp;<br/><br/><br/><br/>'; // this should fix the floating in FF
             forum_print_discussion($course, $cm, $forum, $discussion, $post, $displaymode, $canreply, $canrate);
             break;
 
