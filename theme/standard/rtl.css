@@ -587,3 +587,15 @@ float:right;
 margin-right:15px !important;
 }
 
+/*  File Manager, move file mime type icon to the left */
+#files-index .files img.icon {
+float:left;
+margin-right:9px;
+}
+
+/*  Files Manager, make sure COMMANDS standout clearly  */
+#files-index .commands a:link,
+#files-index .commands a:visited {
+border:1px solid;
+padding:1px;
+}
