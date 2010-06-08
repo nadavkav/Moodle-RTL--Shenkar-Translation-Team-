@@ -517,3 +517,8 @@ text-align:right;
 #mod-lesson-view td.checkbox {
 text-align:left;
 }
+
+/* mod lesson , edit mode alignments */
+.mod-lesson .addlinks {
+float:right;
+}
