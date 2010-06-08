@@ -51,7 +51,7 @@
     $navlinks[] = array('name' => $strglossaries, 'link' => "index.php?id=$course->id", 'type' => 'activity');
     $navlinks[] = array('name' => format_string($glossary->name), 'link' => "view.php?id=$cm->id&amp;tab=GLOSSARY_CATEGORY_VIEW", 'type' => 'activityinstance');
     $navlinks[] = array('name' => get_string("categories","glossary"), 'link' => '', 'type' => 'title');
-    
+
     $navigation = build_navigation($navlinks);
 
     print_header_simple(format_string($glossary->name), "", $navigation,
@@ -114,7 +114,7 @@
 
                 <table border="0" width="100">
                     <tr>
-                        <td align="right" style="width:50%">                
+                        <td align="right" style="width:50%">
                         <form id="form" method="post" action="editcategories.php">
                         <div>
                         <input type="hidden" name="id"          value="<?php p($cm->id) ?>" />
@@ -189,7 +189,7 @@
         </tr>
         <tr><td style="width:100%" colspan="2">
 
-        
+
 
 <?php
     $categories = get_records("glossary_categories","glossaryid",$glossary->id,"name ASC");
@@ -201,7 +201,7 @@
 ?>
 
              <tr>
-               <td style="width:90%" align="left">
+               <td style="width:90%" align="<?php if (right_to_left()==1) { echo "right"; } else { echo "left"; } ?>">
                <?php
                     echo "<b>".format_text($category->name, FORMAT_PLAIN)."</b> <span style=\"font-size:0.75em\">($num_entries " . get_string("entries","glossary") . ")</span>";
                ?>
@@ -215,7 +215,7 @@
              </tr>
 
              <?php
-          
+
           }
         echo '</table>';
      }
