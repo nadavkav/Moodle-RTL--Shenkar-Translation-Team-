@@ -548,3 +548,8 @@ text-align:right;
 padding-left:7px;
 padding-right:7px;
 }
+
+/* emphsize the summary section when in editing mode */
+#course-view .section td.content .summary {
+background-color:#F2FEF2;
+}
