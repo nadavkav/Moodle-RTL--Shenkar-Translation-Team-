@@ -527,3 +527,11 @@ text-align:left;
 .mod-lesson .addlinks {
 float:right;
 }
+
+/*  MOD::ASSIGNMENT , Feedback FORM */
+.mod-assignment .feedback .from {
+float:right;
+}
+.mod-assignment .feedback .files {
+float:left;
+}
