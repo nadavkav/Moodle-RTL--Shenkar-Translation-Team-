@@ -543,3 +543,8 @@ float:right;
 .glossarypost td.icons{
 text-align:right;
 }
+
+#admin-roles-override .rolecap th {
+padding-left:7px;
+padding-right:7px;
+}
