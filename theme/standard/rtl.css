@@ -557,3 +557,33 @@ background-color:#F2FEF2;
 #mod-resource-mod #id_reference_value {
 text-align:left;
 }
+
+/*  grader report view, align the course's name to the right  */
+.grade-report-grader table#user-grades th.category  {
+text-align:right;
+}
+
+/*  grader report view, align the modules' names to the right  */
+.grade-report-grader table#user-grades th.item,
+.grade-report-grader table#user-grades th.categoryitem,
+.grade-report-grader table#user-grades th.courseitem {
+text-align:right;
+}
+
+/*  grader report view, align the "change module's setting" icon to the center , to emphsize it, a little */
+.grade-report-grader table tr.avg td.cell,
+.grade-report-grader table#user-grades td.controls,
+.grade-report-grader table tr.avg,
+.grade-report-grader table tr.avg td,
+.grade-report-grader table tr.avg th {
+text-align:center;
+}
+
+div.groupselector  {
+float:right;
+}
+
+.grade-edit-tree .idnumber {
+margin-right:15px !important;
+}
+
