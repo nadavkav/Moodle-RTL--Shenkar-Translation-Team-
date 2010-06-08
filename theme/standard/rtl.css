@@ -535,3 +535,11 @@ float:right;
 .mod-assignment .feedback .files {
 float:left;
 }
+
+/*  MOD::GLOSSARY , align COMMANDS to the right */
+.glossarypost .commands {
+float:right;
+}
+.glossarypost td.icons{
+text-align:right;
+}
