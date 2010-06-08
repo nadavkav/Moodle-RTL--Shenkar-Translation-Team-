@@ -161,6 +161,7 @@ margin: 2px;
 background-color: rgb(212,208,200);
 font-family: Tahoma, Verdana, sans-serif;
 font-size: 11px;
+direction:<?php if (right_to_left()==1) { echo "rtl"; } else { echo "ltr"; } ?>;
 }
 .title {
 background-color: #ddddff;
@@ -180,7 +181,7 @@ button { width: 70px; }
 form { margin-bottom: 0px; margin-top: 0px; }
 </style>
 </head>
-<body onload="Init()">
+<body onload="Init()" >
   <div class="title"><?php print_string("insertimage","editor");?></div>
   <div class="space"></div>
   <div class="space"></div>
