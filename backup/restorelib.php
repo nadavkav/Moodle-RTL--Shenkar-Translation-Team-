@@ -252,20 +252,20 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
         }
 
         // For each block, call its encode_content_links method
-        static $blockobjects = null; 
-        if (!isset($blockobjects)) { 
-            $blockobjects = array(); 
-            if ($blocks = get_records('block', 'visible', 1)) { 
-                foreach ($blocks as $block) { 
+        static $blockobjects = null;
+        if (!isset($blockobjects)) {
+            $blockobjects = array();
+            if ($blocks = get_records('block', 'visible', 1)) {
+                foreach ($blocks as $block) {
                     if ($blockobject = block_instance($block->name)) {
-                        $blockobjects[] = $blockobject; 
+                        $blockobjects[] = $blockobject;
                     }
                 }
             }
         }
-        
-        foreach ($blockobjects as $blockobject) { 
-            $content = $blockobject->decode_content_links($content,$restore); 
+
+        foreach ($blockobjects as $blockobject) {
+            $content = $blockobject->decode_content_links($content,$restore);
         }
 
         return $content;
@@ -526,7 +526,11 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
         if ($info) {
             $table = new object();
             //This is tha align to every ingo table
-            $table->align = array ("right","left");
+            if (right_to_left()==1) {
+                $table->align = array ("left","left");
+            } else {
+                $table->align = array ("right","right");
+            }
             //This is the nowrap clause
             $table->wrap = array ("","nowrap");
             //The width
@@ -682,7 +686,11 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
         if ($course_header) {
             $table = new object();
             //This is tha align to every ingo table
-            $table->align = array ("right","left");
+            if (right_to_left()==1) {
+                $table->align = array ("left","left");
+            } else {
+                $table->align = array ("right","right");
+            }
             //The width
             $table->width = "70%";
             //Put interesting course header in table
@@ -1365,7 +1373,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
 
                     // This will only be set if we come from 1.7 and above backups
                     //  Also, must do this before insert (insert_record unsets id)
-                    if (!empty($instance->id)) { 
+                    if (!empty($instance->id)) {
                         $oldid = $instance->id;
                     } else {
                         $oldid = 0;
@@ -2263,7 +2271,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $oldoutcome = backup_todb($info['GRADE_ITEM']['#']['OUTCOMEID']['0']['#']);
                                 if (empty($outcomes[$oldoutcome])) {
                                     continue; // error!
-                                } 
+                                }
                                 if (empty($outcomes[$oldoutcome]->id)) {
                                     $outcomes[$oldoutcome]->insert('restore');
                                     $outcomes[$oldoutcome]->use_in($restore->course_id);
@@ -2366,7 +2374,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
 
 
         if ($status and !$importing and $restore_histories) {
-            /// following code is very inefficient 
+            /// following code is very inefficient
 
             $gchcount = count_records ('backup_ids', 'backup_code', $restore->backup_unique_code, 'table_name', 'grade_categories_history');
             $gghcount = count_records ('backup_ids', 'backup_code', $restore->backup_unique_code, 'table_name', 'grade_grades_history');
@@ -2399,7 +2407,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 //traverse_xmlize($info);                            //Debug
                                 //print_object ($GLOBALS['traverse_array']);         //Debug
                                 //$GLOBALS['traverse_array']="";                     //Debug
-    
+
                                 $oldobj = backup_getid($restore->backup_unique_code,"grade_categories", backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['OLDID']['0']['#']));
                                 if (empty($oldobj->new_id)) {
                                     // if the old object is not being restored, can't restoring its history
@@ -2410,12 +2418,12 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $dbrec->action = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['ACTION']['0']['#']);
                                 $dbrec->source = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['SOURCE']['0']['#']);
                                 $dbrec->timemodified = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['TIMEMODIFIED']['0']['#']);
-    
+
                                 // loggeduser might not be restored, e.g. admin
                                 if ($oldobj = backup_getid($restore->backup_unique_code,"user", backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['LOGGEDUSER']['0']['#']))) {
                                     $dbrec->loggeduser = $oldobj->new_id;
                                 }
-    
+
                                 // this item might not have a parent at all, do not skip it if no parent is specified
                                 if (backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['PARENT']['0']['#'])) {
                                     $oldobj = backup_getid($restore->backup_unique_code,"grade_categories", backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['PARENT']['0']['#']));
@@ -2447,15 +2455,15 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $dbrec->aggregation = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['AGGRETGATION']['0']['#']);
                                 $dbrec->keephigh = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['KEEPHIGH']['0']['#']);
                                 $dbrec->droplow = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['DROPLOW']['0']['#']);
-                                
+
                                 $dbrec->aggregateonlygraded = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['AGGREGATEONLYGRADED']['0']['#']);
                                 $dbrec->aggregateoutcomes = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['AGGREGATEOUTCOMES']['0']['#']);
                                 $dbrec->aggregatesubcats = backup_todb($info['GRADE_CATEGORIES_HISTORY']['#']['AGGREGATESUBCATS']['0']['#']);
-    
+
                                 $dbrec->courseid = $restore->course_id;
                                 insert_record('grade_categories_history', $dbrec);
                                 unset($dbrec);
-    
+
                             }
                             //Increment counters
                             $counter++;
@@ -2473,7 +2481,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     }
                 }
             }
-    
+
             // process histories
             if ($gghcount && $status) {
                 if (!defined('RESTORE_SILENTLY')) {
@@ -2497,7 +2505,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 //traverse_xmlize($info);                            //Debug
                                 //print_object ($GLOBALS['traverse_array']);         //Debug
                                 //$GLOBALS['traverse_array']="";                     //Debug
-    
+
                                 $oldobj = backup_getid($restore->backup_unique_code,"grade_grades", backup_todb($info['GRADE_GRADES_HISTORY']['#']['OLDID']['0']['#']));
                                 if (empty($oldobj->new_id)) {
                                     // if the old object is not being restored, can't restoring its history
@@ -2511,7 +2519,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 if ($oldobj = backup_getid($restore->backup_unique_code,"user", backup_todb($info['GRADE_GRADES_HISTORY']['#']['LOGGEDUSER']['0']['#']))) {
                                     $dbrec->loggeduser = $oldobj->new_id;
                                 }
-                                
+
                                 $oldobj = backup_getid($restore->backup_unique_code,"grade_items", backup_todb($info['GRADE_GRADES_HISTORY']['#']['ITEMID']['0']['#']));
                                 $dbrec->itemid = $oldobj->new_id;
                                 if (empty($dbrec->itemid)) {
@@ -2526,12 +2534,12 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 if ($oldobj = backup_getid($restore->backup_unique_code,"user", backup_todb($info['GRADE_GRADES_HISTORY']['#']['USERMODIFIED']['0']['#']))) {
                                     $dbrec->usermodified = $oldobj->new_id;
                                 }
-                                
+
                                 if (backup_todb($info['GRADE_GRADES_HISTORY']['#']['RAWSCALEID']['0']['#'])) {
                                     $scale = backup_getid($restore->backup_unique_code,"scale",backup_todb($info['GRADE_GRADES_HISTORY']['#']['RAWSCALEID']['0']['#']));
                                     $dbrec->rawscaleid = $scale->new_id;
                                 }
-                                
+
                                 $dbrec->finalgrade = backup_todb($info['GRADE_GRADES_HISTORY']['#']['FINALGRADE']['0']['#']);
                                 $dbrec->hidden = backup_todb($info['GRADE_GRADES_HISTORY']['#']['HIDDEN']['0']['#']);
                                 $dbrec->locked = backup_todb($info['GRADE_GRADES_HISTORY']['#']['LOCKED']['0']['#']);
@@ -2543,10 +2551,10 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $dbrec->feedbackformat = backup_todb($info['GRADE_TEXT_HISTORY']['#']['FEEDBACKFORMAT']['0']['#']);
                                 $dbrec->information = backup_todb($info['GRADE_TEXT_HISTORY']['#']['INFORMATION']['0']['#']);
                                 $dbrec->informationformat = backup_todb($info['GRADE_TEXT_HISTORY']['#']['INFORMATIONFORMAT']['0']['#']);
-    
+
                                 insert_record('grade_grades_history', $dbrec);
                                 unset($dbrec);
-    
+
                             }
                             //Increment counters
                             $counter++;
@@ -2564,9 +2572,9 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     }
                 }
             }
-    
+
             // process histories
-    
+
             if ($gihcount && $status) {
                 if (!defined('RESTORE_SILENTLY')) {
                     echo '<li>'.get_string('gradeitemshistory','grades').'</li>';
@@ -2589,8 +2597,8 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 //traverse_xmlize($info);                            //Debug
                                 //print_object ($GLOBALS['traverse_array']);         //Debug
                                 //$GLOBALS['traverse_array']="";                     //Debug
-    
-    
+
+
                                 $oldobj = backup_getid($restore->backup_unique_code,"grade_items", backup_todb($info['GRADE_ITEM_HISTORY']['#']['OLDID']['0']['#']));
                                 if (empty($oldobj->new_id)) {
                                     // if the old object is not being restored, can't restoring its history
@@ -2611,31 +2619,31 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                     $counter++;
                                     continue; // category not restored
                                 }
-    
+
                                 $dbrec->itemname= backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMNAME']['0']['#']);
                                 $dbrec->itemtype = backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMTYPE']['0']['#']);
                                 $dbrec->itemmodule = backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMMODULE']['0']['#']);
-    
+
                                 // code from grade_items restore
                                 $iteminstance = backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMINSTANCE']['0']['#']);
                                 // do not restore if this grade_item is a mod, and
                                 if ($dbrec->itemtype == 'mod') {
-    
+
                                     if (!restore_userdata_selected($restore,  $dbrec->itemmodule, $iteminstance)) {
                                         // module instance not selected when restored using granular
                                         // skip this item
                                         $counter++;
                                         continue;
                                     }
-    
+
                                     // iteminstance should point to new mod
-    
+
                                     $mod = backup_getid($restore->backup_unique_code,$dbrec->itemmodule, $iteminstance);
                                     $dbrec->iteminstance = $mod->new_id;
-    
+
                                 } else if ($dbrec->itemtype == 'category') {
                                     // the item instance should point to the new grade category
-    
+
                                     // only proceed if we are restoring all grade items
                                     if ($restoreall) {
                                         $category = backup_getid($restore->backup_unique_code,'grade_categories', $iteminstance);
@@ -2650,16 +2658,16 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                         // TODO any special code needed here to restore course item without duplicating it?
                                         // find the course category with depth 1, and course id = current course id
                                         // this would have been already restored
-    
+
                                         $cat = get_record('grade_categories', 'depth', 1, 'courseid', $restore->course_id);
                                         $dbrec->iteminstance = $cat->id;
-    
+
                                     } else {
                                         $counter++;
                                         continue;
                                     }
                                 }
-    
+
                                 $dbrec->itemnumber = backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMNUMBER']['0']['#']);
                                 $dbrec->iteminfo = backup_todb($info['GRADE_ITEM_HISTORY']['#']['ITEMINFO']['0']['#']);
                                 $dbrec->idnumber = backup_todb($info['GRADE_ITEM_HISTORY']['#']['IDNUMBER']['0']['#']);
@@ -2686,10 +2694,10 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $dbrec->locked = backup_todb($info['GRADE_ITEM_HISTORY']['#']['LOCKED']['0']['#']);
                                 $dbrec->locktime = backup_todb($info['GRADE_ITEM_HISTORY']['#']['LOCKTIME']['0']['#']);
                                 $dbrec->needsupdate = backup_todb($info['GRADE_ITEM_HISTORY']['#']['NEEDSUPDATE']['0']['#']);
-    
+
                                 insert_record('grade_items_history', $dbrec);
                                 unset($dbrec);
-    
+
                             }
                             //Increment counters
                             $counter++;
@@ -2707,7 +2715,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     }
                 }
             }
-    
+
             // process histories
             if ($gohcount && $status) {
                 if (!defined('RESTORE_SILENTLY')) {
@@ -2731,7 +2739,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 //traverse_xmlize($info);                            //Debug
                                 //print_object ($GLOBALS['traverse_array']);         //Debug
                                 //$GLOBALS['traverse_array']="";                     //Debug
-    
+
                                 $oldobj = backup_getid($restore->backup_unique_code,"grade_outcomes", backup_todb($info['GRADE_OUTCOME_HISTORY']['#']['OLDID']['0']['#']));
                                 if (empty($oldobj->new_id)) {
                                     // if the old object is not being restored, can't restoring its history
@@ -2751,10 +2759,10 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 $oldobj = backup_getid($restore->backup_unique_code,"scale", backup_todb($info['GRADE_OUTCOME_HISTORY']['#']['SCALEID']['0']['#']));
                                 $dbrec->scaleid = $oldobj->new_id;
                                 $dbrec->description = backup_todb($info['GRADE_OUTCOME_HISTORY']['#']['DESCRIPTION']['0']['#']);
-    
+
                                 insert_record('grade_outcomes_history', $dbrec);
                                 unset($dbrec);
-    
+
                             }
                             //Increment counters
                             $counter++;
@@ -3671,7 +3679,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
     function restore_group_getid($restore, $groupid) {
         //We have to recode the groupid field
         $group = backup_getid($restore->backup_unique_code, 'groups', $groupid);
-        
+
         if ($restore->groups == RESTORE_GROUPS_NONE or $restore->groups == RESTORE_GROUPINGS_ONLY) {
             $group->new_id = 0;
         }
@@ -3685,7 +3693,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
     function restore_grouping_getid($restore, $groupingid) {
         //We have to recode the groupid field
         $grouping = backup_getid($restore->backup_unique_code, 'groupings', $groupingid);
-        
+
         if ($restore->groups != RESTORE_GROUPS_GROUPINGS and $restore->groups != RESTORE_GROUPINGS_ONLY) {
             $grouping->new_id = 0;
         }
@@ -3818,7 +3826,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
             //We have to recode the userid field
             if (!$user = backup_getid($restore->backup_unique_code,"user",$group_member->userid)) {
                 debugging("group membership can not be restored, user id $group_member->userid not present in backup");
-                // do not not block the restore 
+                // do not not block the restore
                 continue;
             }
 
@@ -3901,7 +3909,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
         // now fix the defaultgroupingid in course
         $course = get_record('course', 'id', $restore->course_id);
         if ($course->defaultgroupingid) {
-            if ($grouping = restore_grouping_getid($restore, $course->defaultgroupingid)) { 
+            if ($grouping = restore_grouping_getid($restore, $course->defaultgroupingid)) {
                 set_field('course', 'defaultgroupingid', $grouping->new_id, 'id', $course->id);
             } else {
                 set_field('course', 'defaultgroupingid', 0, 'id', $course->id);
@@ -4153,7 +4161,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
 
         $counter = 0;
 
-        // 'users' is the old users folder, 'user' is the new one, with a new hierarchy. Detect which one is here and treat accordingly 
+        // 'users' is the old users folder, 'user' is the new one, with a new hierarchy. Detect which one is here and treat accordingly
         //in CFG->dataroot
         $dest_dir = $CFG->dataroot."/user";
         $status = check_dir_exists($dest_dir,true);
@@ -4161,7 +4169,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
         //Now, we iterate over "user_files" records to check if that user dir must be
         //copied (and renamed) to the "users" dir.
         $rootdir = $CFG->dataroot."/temp/backup/".$restore->backup_unique_code."/user_files";
-        
+
         //Check if directory exists
         $userlist = array();
 
@@ -4178,7 +4186,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                 }
             }
 
-            foreach ($userlist as $olduserid => $backup_location) { 
+            foreach ($userlist as $olduserid => $backup_location) {
                 //Look for dir like username in backup_ids
                 //If that user exists in backup_ids
                 if ($user = backup_getid($restore->backup_unique_code,"user",$olduserid)) {
@@ -4859,7 +4867,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                            FROM {$CFG->prefix}course_modules
                                            WHERE id = '$cm_module->new_id' AND
                                                  instance = '0'");
-                                                 
+
                     if($course_modules_inst_zero){ // Clean up the invalid instances
                          foreach($course_modules_inst_zero as $course_modules_inst){
                              delete_records('course_modules', 'id',$course_modules_inst->id);
@@ -6003,7 +6011,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                 if (!isset($this->temp)) {
                     $this->temp = "";
                 }
-                $this->temp .= htmlspecialchars(trim($this->content))."</".$tagName.">";    
+                $this->temp .= htmlspecialchars(trim($this->content))."</".$tagName.">";
 
                 //Dependig of different combinations, do different things
                 if ($this->level == 4) {
@@ -6018,7 +6026,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                             $xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$this->temp;
                             //Call to xmlize for this portion of xml data (one BLOCK)
                             //echo "-XMLIZE: ".strftime ("%X",time()),"-";                                                //Debug
-                            $data = xmlize($xml_data,0);         
+                            $data = xmlize($xml_data,0);
                             //echo strftime ("%X",time())."<p>";                                                          //Debug
                             //traverse_xmlize($data);                                                                     //Debug
                             //print_object ($GLOBALS['traverse_array']);                                                  //Debug
@@ -6028,7 +6036,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                                 //Get old id
                                 $oldid = $data['BLOCK']['#']['ID']['0']['#'];
                                 //Get instancedata
-                                
+
                                 if ($data = $data['BLOCK']['#']['INSTANCEDATA']['0']['#']) {
                                     //Restore code calls this multiple times - so might already have the newid
                                     if ($newid = backup_getid($this->preferences->backup_unique_code,'block_instance',$oldid)) {
@@ -6537,7 +6545,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     //Reset temp
                     unset($this->temp);
                 }
-                
+
                 if (($this->level == 5) and ($tagName == "GRADE_LETTER")) {
                     //Prepend XML standard header to info gathered
                     $xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n".$this->temp;
@@ -6716,7 +6724,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     $preference_id = $data["GRADE_PREFERENCE"]["#"]["ID"]["0"]["#"];
                     $this->counter++;
                     //Save to db
-                    $status = backup_putid($this->preferences->backup_unique_code, 'grade_preferences', $preference_id, 
+                    $status = backup_putid($this->preferences->backup_unique_code, 'grade_preferences', $preference_id,
                                            null,$data);
                     //Create returning info
                     $this->info = $this->counter;
@@ -6739,7 +6747,7 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
                     $letter_id = $data["GRADE_LETTER"]["#"]["ID"]["0"]["#"];
                     $this->counter++;
                     //Save to db
-                    $status = backup_putid($this->preferences->backup_unique_code, 'grade_letter' ,$letter_id, 
+                    $status = backup_putid($this->preferences->backup_unique_code, 'grade_letter' ,$letter_id,
                                            null,$data);
                     //Create returning info
                     $this->info = $this->counter;
@@ -7865,12 +7873,12 @@ define('RESTORE_GROUPS_GROUPINGS', 3);
             // MDL-9290 performance improvement on reading large xml
             $lasttime = time(); // crmas
             while ($data = fread($fp, 8192) and !$moodle_parser->finished) {
-             
+
                 if ((time() - $lasttime) > 5) {
                     $lasttime = time();
                     backup_flush(1);
                 }
-             
+
                 xml_parse($xml_parser, $data, feof($fp))
                         or die(sprintf("XML error: %s at line %d",
                         xml_error_string(xml_get_error_code($xml_parser)),

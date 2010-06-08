@@ -44,6 +44,15 @@
         error("Site not found!");
     }
 
+    // table cell's alignments rtl/ltr
+    if (right_to_left()==0) {
+            $rightalign="right";
+            $leftalign="left";
+        } else {
+            $rightalign="left";
+            $leftalign="right";
+    }
+
     //Checks for the required files/functions to restore every mod
     $count = 0;
     if ($allmods = get_records("modules") ) {
@@ -196,7 +205,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
     //First, course destination
     //Print the full tr
     echo "<tr>";
-    echo "<td align=\"right\"><b>";
+    echo "<td align=\"$rightalign\"><b>";
     echo '<label for="menurestore_restoreto">'.get_string ('restoreto').'</label>';
     echo "</b>";
     echo "</td><td colspan=\"3\">";
@@ -238,7 +247,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         // find the list of cates user can edit
         echo "<tr valign=\"top\" >";
-        echo "<td align=\"right\">";
+        echo "<td align=\"$rightalign\">";
         echo '<label for="menurestore_restorecatto">'.get_string ('category').'</label>';
         echo "</td>";
         echo "<td>";
@@ -263,7 +272,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         echo "</tr>";
 
         echo "<tr valign=\"top\" >";
-        echo "<td align=\"right\">";
+        echo "<td align=\"$rightalign\">";
         echo '<label for="shortnamefield">'.get_string ('shortname').'</label>';
         echo "</td>";
         echo "<td><input type=\"text\" id=\"shortnamefield\" name=\"shortname\" maxlength=\"100\"  size=\"20\" value=\"".s($form1->shortname)."\" alt=\"".get_string("shortname")."\"  />" ;
@@ -272,7 +281,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         echo "</td>";
         echo "</tr>";
         echo "<tr valign=\"top\" >";
-        echo "<td align=\"right\">";
+        echo "<td align=\"$rightalign\">";
         echo '<label for="fullnamefield">'.get_string ('fullname').'</label>';
         echo "</td>";
         echo "<td><input type=\"text\" id=\"fullnamefield\" name=\"fullname\" maxlength=\"254\" size=\"50\" value=\"".s($form1->fullname)."\" alt=\" ".get_string("fullname")."\"  />" ;
@@ -289,7 +298,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
     // and disabling roll if not allowed.
     if (restore_user_can_roll_dates()) {
         echo "<tr valign=\"top\"> ";
-        echo "<td align=\"right\"> ";
+        echo "<td align=\"$rightalign\"> ";
         print_string("startdate");
         echo "</td><td>";
     /// Show the roll dates option only if the backup course has a start date
@@ -317,7 +326,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
     if ($allmods = get_records("modules") ) {
         //Print option to select/deselect everything with 1 click.
         echo "<tr>";
-        echo "<td align=\"right\">";
+        echo "<td align=\"$rightalign\">";
         echo '<b>'.get_string("include")."</b>";
         echo "</td><td>";
         echo "<a href=\"javascript:void(0);\" onclick=\"selectItemInCheckboxByName('form1', 'restore_', true);\">".
@@ -326,7 +335,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
              get_string("none")."</a>";
         echo "</td>";
         if ($restoreuserinfo) {
-            echo "<td align=\"right\">";
+            echo "<td align=\"$rightalign\">";
             echo '<b>&nbsp;</b>';
             echo "</td><td>";
             echo "<a href=\"javascript:void(0);\" onclick=\"selectItemInCheckboxByName('form1', 'restore_user_info_', true);\">".
@@ -354,7 +363,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
                     if (isset($info->mods[$modname]) && $info->mods[$modname]->backup == "true") {
                         //Print the full tr
                         echo "<tr class=\"r".$currentrow."\">";
-                        echo "<td align=\"right\">&nbsp;";
+                        echo "<td align=\"$rightalign\">&nbsp;";
                         echo "</td><td>";
                         $restore_options[1] = get_string("yes");
                         $restore_options[0] = get_string("no");
@@ -364,7 +373,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
                         print_checkbox($restore_var, $$restore_var, $$restore_var, get_string("modulenameplural",$modname),'','selectItemInCheckboxByName(\'form1\',\'restore_'.$modname.'\',this.checked)');
                         //If backup contains user data, then show menu, else fix it to
                         //without user data
-                        echo "</td><td align=\"right\">&nbsp;";
+                        echo "</td><td align=\"$rightalign\">&nbsp;";
                         echo "</td><td>";
                         if ($info->mods[$modname]->userinfo == "true" && $restoreuserinfo) {
                             $restore_user_options[1] = get_string("yes");
@@ -381,6 +390,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
                         if (isset($info->mods[$modname]->instances)) {
                             $instances = $info->mods[$modname]->instances;
                         }
+
                         if (!empty($instances) && is_array($instances)) {
                             echo '<tr><td></td><td colspan="3"><table class="restore-form-instances">';
                             foreach ($instances as $instance) {
@@ -388,7 +398,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
                                 $var = 'restore_'.$modname.'_instance_'.$instance->id;
                                 $$var = optional_param($var,1);
                                 print_checkbox($var,$$var,$$var,$instance->name,$instance->name,'this.form.elements[\'restore_'.$modname.'\'].checked=1;');
-                                echo '</td><td align="right">&nbsp;';
+                                echo '</td><td align="'.$rightalign.'">&nbsp;';
                                 $var = 'restore_user_info_'.$modname.'_instance_'.$instance->id;
                                 $$var = optional_param($var,1);
                                 if (!empty($info->mods[$modname]->instances) && ($info->mods[$modname]->instances[$instance->id]->userinfo == 'true') && $restoreuserinfo) {
@@ -422,7 +432,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the Metacourse tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_metacourse">'.get_string ("metacourse").'</label>';
         echo "</b></td><td colspan=\"2\">";
         //If metacourse are in the backup file, show menu, else fixed to no
@@ -438,7 +448,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         echo "</td></tr>";
         //Now print the Users tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_users">'.get_string ("users").'</label>';
         echo "</b></td><td colspan=\"2\">";
         //If some user is present in the backup file
@@ -460,7 +470,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the Groups tr (assume there is no $info->backup_groups)
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         $helplink = helpbutton('grouprestore', get_string('groups'), '', true, false, '', true);
         echo '<label for="menurestore_groups">'.get_string ("groups").'</label>'.$helplink;
         echo "</b></td><td colspan=\"2\">";
@@ -478,7 +488,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the Logs tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_logs">'.get_string ("logs").'</label>';
         echo "</b></td><td colspan=\"2\">";
         //If logs are in the backup file, show menu, else fixed to no
@@ -495,7 +505,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the User Files tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_user_files">'.get_string ("userfiles").'</label>';
         echo "</b></td><td colspan=\"2\">";
         //If user files are in the backup file, show menu, else fixed to no
@@ -512,7 +522,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the Course Files tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_course_files">'.get_string ("coursefiles").'</label>';
         echo "</b></td><td colspan=\"2\">";
         echo "<input type=\"hidden\" name=\"backup_unique_code\" value=\"$backup_unique_code\" />";
@@ -532,7 +542,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
 
         //Now print the Site Files tr
         echo "<tr>";
-        echo "<td align=\"right\" colspan=\"2\"><b>";
+        echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
         echo '<label for="menurestore_site_files">'.get_string ("sitefiles").'</label>';
         echo "</b></td><td colspan=\"2\">";
         //If site files are in the backup file, show menu, else fixed to no
@@ -550,7 +560,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         // do you want grade histories to be restored?
         if (empty($CFG->disablegradehistory) and $restoreuserinfo) {
             echo "<tr>";
-            echo "<td align=\"right\" colspan=\"2\"><b>";
+            echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
             echo '<label for="menurestore_gradebook_history">'.get_string ('gradebookhistories', 'grades').'</label>';
             echo "</b></td><td colspan=\"2\">";
             if (isset($info->gradebook_histories) && $info->gradebook_histories == "true") {
@@ -573,7 +583,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         //Also, messaging must be enabled in the destination site
         if (isset($info->backup_messages) && $info->backup_messages == "true" && !empty($CFG->messaging) and $restoreuserinfo) {
             echo "<tr>";
-            echo "<td align=\"right\" colspan=\"2\"><b>";
+            echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
             echo '<label for="menurestore_messages">'.get_string ('messages', 'message').'</label>';
             echo "</b></td><td colspan=\"2\">";
             $message_options = array();
@@ -591,7 +601,7 @@ function selectItemInCheckboxByName(formId, checkName, checked ) {
         //Also, blogs must be enabled in the destination site
         if (isset($info->backup_blogs) && $info->backup_blogs == "true" && !empty($CFG->bloglevel) and $restoreuserinfo) {
             echo "<tr>";
-            echo "<td align=\"right\" colspan=\"2\"><b>";
+            echo "<td align=\"$rightalign\" colspan=\"2\"><b>";
             echo '<label for="menurestore_blogs">'.get_string ('blogs', 'blog').'</label>';
             echo "</b></td><td colspan=\"2\">";
             $blog_options = array();
@@ -624,14 +634,14 @@ if ($restoreuserinfo) {
     echo ('<table width="100%" class="restore-form-instances">');
 
     if ($info->backup_moodle_version < 2006092801) {
-        echo ('<tr><td align="right" style="width:50%"><b>'.get_string('sourcerole').'</b></td><td align="left" style="width:50%"><b>'.get_string('targetrole').'</b></td></tr>');
+        echo ('<tr><td align="right" style="width:50%"><b>'.get_string('sourcerole').'</b></td><td align="'.$leftalign.'" style="width:50%"><b>'.get_string('targetrole').'</b></td></tr>');
 
         // 1.6 and below backup
 
         /// Editting teacher
-        echo ('<tr><td align="right">');
+        echo ("<tr><td align=\"$rightalign\">");
         echo '<label for="menudefaultteacheredit">'.get_string ('defaultcourseteacher').'</label>';
-        echo ('</td><td algin="left">');
+        echo ("</td><td algin=\"$leftalign\">");
 
         // get the first teacheredit legacy
         $roles = get_roles_with_capability('moodle/legacy:editingteacher', CAP_ALLOW, get_context_instance(CONTEXT_SYSTEM));
@@ -641,10 +651,10 @@ if ($restoreuserinfo) {
         echo ('</td></tr>');
 
         /// Non-editting teacher
-        echo ('<tr><td align="right">');
+        echo ("</td><td algin=\"$rightalign\">");
         echo '<label for="menudefaultteacher">'.get_string ('noneditingteacher').'</label>';
         print_string('noneditingteacher');
-        echo ('</td><td algin="left">');
+        echo ("</td><td algin=\"$leftalign\">");
 
         // get the first teacheredit legacy
         $roles = get_roles_with_capability('moodle/legacy:teacher', CAP_ALLOW, get_context_instance(CONTEXT_SYSTEM));
@@ -655,9 +665,9 @@ if ($restoreuserinfo) {
 
 
         /// Student
-        echo ('<tr><td align="right">');
+        echo ("</td><td algin=\"$rightalign\">");
         echo '<label for="menudefaultstudent">'.get_string ('defaultcoursestudent').'</label>';
-        echo ('</td><td algin="left">');
+        echo ("</td><td algin=\"$leftalign\">");
 
         // get the first teacheredit legacy
         $roles = get_roles_with_capability('moodle/legacy:student', CAP_ALLOW, get_context_instance(CONTEXT_SYSTEM));
@@ -681,7 +691,7 @@ if ($restoreuserinfo) {
         }
 
         if ($canmaproles) {
-            echo ('<tr><td align="right" style="width:50%"><b>'.get_string('sourcerole').'</b></td><td align="left" style="width:50%"><b>'.get_string('targetrole').'</b></td></tr>');
+            echo ('<tr><td align="'.$rightalign.'" style="padding-left:20px; width:50%"><b>'.get_string('sourcerole').'</b></td><td align="'.$leftalign.'" style="padding-right:20px; width:50%"><b>'.get_string('targetrole').'</b></td></tr>');
         }
 
         if (!empty($roles->roles)) { // possible to have course with no roles
@@ -698,9 +708,9 @@ if ($restoreuserinfo) {
 
                 $mappableroles = !empty($siteroleschoicearray) ? $siteroleschoicearray : array();
 
-                echo ('<tr><td align="right">');
-                echo '<label for="menuroles_'.$roleid.'">'.format_string($role->name)." (".($role->shortname).")".'</label>';
-                echo ('</td><td align="left">');
+                echo ("</td><td algin=\"$rightalign\">");
+                echo '<label style="float:'.$rightalign.';" for="menuroles_'.$roleid.'">'.format_string($role->name)." (".($role->shortname).")".'</label>';
+                echo ("</td><td align=\"$leftalign\">");
 
                 /// first, we see if any exact role definition is found
                 /// if found, that is the only option of restoring to
