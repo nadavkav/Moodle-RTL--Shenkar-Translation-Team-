@@ -487,12 +487,12 @@ width:7em;
 
 th.header, td.header, div.header {
 text-align:center;
-background-color:#DDE0FC; /* makes the table's Header line more clear */
 }
 
 /*  Qustion Bank  */
 #question-edit th.header {
 text-align:center !important;
+background-color:#DDE0FC; /* makes the table's Header line more clear */
 }
 
 /*  question bank :: import / exports layout fixes */
