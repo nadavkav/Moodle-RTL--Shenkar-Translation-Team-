@@ -553,3 +553,7 @@ padding-right:7px;
 #course-view .section td.content .summary {
 background-color:#F2FEF2;
 }
+
+#mod-resource-mod #id_reference_value {
+text-align:left;
+}
