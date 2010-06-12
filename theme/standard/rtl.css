@@ -599,3 +599,13 @@ margin-right:9px;
 border:1px solid;
 padding:1px;
 }
+
+/* left align CLOZE question parsed answers */
+#question-type-multianswer #subhdr div.felement,
+#question-type-multianswer #subhdr fieldset.felement {
+direction:ltr;
+float:right;
+margin-left:0;
+margin-right:10px;
+text-align:left;
+}
