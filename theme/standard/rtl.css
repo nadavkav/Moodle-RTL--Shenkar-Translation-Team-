@@ -649,3 +649,8 @@ text-align:right;
 #mod-quiz-report table#itemanalysis .header  {
 text-align:right;
 }
+
+/*  Activity Navigation listbox */
+.navigation option {
+text-align:right;
+}
