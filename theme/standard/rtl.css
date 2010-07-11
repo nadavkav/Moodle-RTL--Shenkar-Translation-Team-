@@ -600,6 +600,11 @@ border:1px solid;
 padding:1px;
 }
 
+/*  Files table's Header. make it more visually clear */
+#files-index .files .header {
+background-color:#F5F5F5;
+}
+
 /* left align CLOZE question parsed answers */
 #question-type-multianswer #subhdr div.felement,
 #question-type-multianswer #subhdr fieldset.felement {
@@ -613,4 +618,11 @@ text-align:left;
 /*  Course Categories table, view and edit modes */
 #course-index select {
 width:100%;
+}
+
+/*  Align the English filenames inside SELECT listbox to the left, when in rtl mode.
+    (should always be aligned to left!)
+    Admin language file selection listbox */
+#admin-lang form.popupform, #admin-lang form.popupform div {
+direction:ltr;
 }
