@@ -626,3 +626,9 @@ width:100%;
 #admin-lang form.popupform, #admin-lang form.popupform div {
 direction:ltr;
 }
+
+/* Quiz, Calculated question type, math formula field should always be aligned to the left */
+#question-type-calculated #id_answer_0 {
+direction:ltr;
+}
+
