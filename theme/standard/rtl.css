@@ -639,3 +639,8 @@ body#user-index table#participants td,
 body#user-index table#participants th {
 text-align:right;
 }
+
+/* Add new calendar event */
+#calendar .sideblock h2 {
+text-align:right;
+}
