@@ -138,6 +138,7 @@ function quiz_print_question_list($quiz, $pageurl, $allowdelete=true, $showbreak
     $strorder = get_string("order");
     $strquestionname = get_string("questionname", "quiz");
     $strgrade = get_string("grade");
+    $strpoints = get_string("points");
     $strremove = get_string('remove', 'quiz');
     $stredit = get_string("edit");
     $strview = get_string("view");
@@ -186,16 +187,22 @@ function quiz_print_question_list($quiz, $pageurl, $allowdelete=true, $showbreak
     echo "<th class=\"header\" scope=\"col\">#</th>";
     echo "<th align=\"left\" style=\"white-space:nowrap;\" class=\"header\" scope=\"col\">$strquestionname</th>";
     echo "<th style=\"white-space:nowrap;\" class=\"header\" scope=\"col\">$strtype</th>";
-    echo "<th style=\"white-space:nowrap;\" class=\"header\" scope=\"col\">$strgrade</th>";
+    echo "<th style=\"white-space:nowrap;\" class=\"header\" scope=\"col\">$strpoints</th>";
     echo "<th align=\"center\" style=\"white-space:nowrap;\" class=\"header\" scope=\"col\">$straction</th>";
     echo "</tr>\n";
-
+    echo "<tr><td colspan=\"8\"><hr/></td></tr>";
 	// for RTL languages: switch right and left arrows /****/
-    if (right_to_left()) { 
-        $movearrow = 'moveleft.gif'; 
-    } else { 
-        $movearrow = 'removeright.gif'; 
-    } 
+    if (right_to_left()) {
+        $movearrow = 'moveleft.gif';
+        $alignright = 'left';
+        $alignleft = 'right';
+
+    } else {
+        $movearrow = 'removeright.gif';
+        $alignright = 'right';
+        $alignleft = 'left';
+
+    }
 
     foreach ($order as $i => $qnum) {
 
@@ -274,7 +281,7 @@ function quiz_print_question_list($quiz, $pageurl, $allowdelete=true, $showbreak
         echo "<td align=\"center\">";
         print_question_icon($question);
         echo "</td>";
-        echo '<td align="left">';
+        echo '<td align="'.$alignleft.'">';
         if ($question->qtype == 'description') {
             echo "<input type=\"hidden\" name=\"q$qnum\" value=\"0\" /> \n";
         } else {
@@ -306,20 +313,21 @@ function quiz_print_question_list($quiz, $pageurl, $allowdelete=true, $showbreak
         $sumgrade += $quiz->grades[$qnum];
     }
 
-    echo "<tr><td colspan=\"6\" align=\"right\">\n";
+    echo "<tr><td colspan=\"8\"><hr/></td></tr>";
+    echo "<tr><td colspan=\"6\" align=\"$alignright\">\n";
     print_string('total');
     echo ": </td>";
-    echo "<td align=\"left\">\n";
+    echo "<td align=\"$alignleft\">\n";
     echo "<strong>$sumgrade</strong>";
     echo "</td><td>&nbsp;\n</td></tr>\n";
 
-    echo "<tr><td colspan=\"6\" align=\"right\">\n";
+    echo "<tr><td colspan=\"6\" align=\"$alignright\">\n";
     print_string('maximumgrade');
     echo ": </td>";
-    echo "<td align=\"left\">\n";
+    echo "<td align=\"$alignleft\">\n";
     echo '<input type="text" name="maxgrade" size="2" tabindex="'.($qno+1)
      .'" value="'.$quiz->grade.'" />';
-    echo '</td><td align="left">';
+    echo '</td><td align="'.$alignleft.'">';
     helpbutton("maxgrade", get_string("maximumgrade"), "quiz");
     echo "</td></tr></table>\n";
 
@@ -362,7 +370,7 @@ function quiz_print_question_list($quiz, $pageurl, $allowdelete=true, $showbreak
     print_string('reordertool', 'quiz');
     echo ' ';
     helpbutton('reorderingtool', get_string('reordertool', 'quiz'), 'quiz');
-    
+
     echo '<div class="quizquestionlistcontrols"><input type="submit" name="repaginate" value="'. get_string('go') .'" /></div>';
     echo '</fieldset>';
     echo '</form>';
