@@ -609,3 +609,8 @@ margin-left:0;
 margin-right:10px;
 text-align:left;
 }
+
+/*  Course Categories table, view and edit modes */
+#course-index select {
+width:100%;
+}

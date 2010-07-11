@@ -307,13 +307,22 @@ function print_category_edit($category, $displaylist, $parentslist, $depth=-1, $
         $str->spacer = '<img src="'.$CFG->wwwroot.'/pix/spacer.gif" class="iconsmall" alt="" /> ';
     }
 
+    // table alignment, rtl/ltr support (complimentary code is placed in rtl.css file)
+    if (right_to_left()) {
+        $alignright = "left";
+        $alignleft = "right";
+    } else {
+        $alignright = "right";
+        $alignleft = "left";
+    }
+
     if (!empty($category)) {
 
         if (!isset($category->context)) {
             $category->context = get_context_instance(CONTEXT_COURSECAT, $category->id);
         }
 
-        echo '<tr><td align="left" class="name">';
+        echo '<tr><td align="'.$alignleft.'" class="name">';
         for ($i=0; $i<$depth;$i++) {
             echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         }
@@ -357,7 +366,7 @@ function print_category_edit($category, $displaylist, $parentslist, $depth=-1, $
         }
         echo '</td>';
 
-        echo '<td align="left">';
+        echo '<td align="'.$alignright.'">';
         if (has_capability('moodle/category:manage', $category->context)) {
             $tempdisplaylist = $displaylist;
             unset($tempdisplaylist[$category->id]);
