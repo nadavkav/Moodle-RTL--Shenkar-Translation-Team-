@@ -49,12 +49,21 @@
     $strtopic  = get_string("topic");
     $strentries  = get_string("entries", "glossary");
 
+    // Table alignment for RTL mode
+    if (right_to_left()) {
+        $alignment = 'RIGHT';
+
+    } else {
+        $alignment = 'LEFT';
+
+    }
+
     if ($course->format == "weeks") {
         $table->head  = array ($strweek, $strname, $strentries);
-        $table->align = array ("CENTER", "LEFT", "CENTER");
+        $table->align = array ("CENTER", $alignment, "CENTER");
     } else if ($course->format == "topics") {
         $table->head  = array ($strtopic, $strname, $strentries);
-        $table->align = array ("CENTER", "LEFT", "CENTER");
+        $table->align = array ("CENTER", $alignment, "CENTER");
     } else {
         $table->head  = array ($strname, $strentries);
         $table->align = array ("LEFT", "CENTER");
