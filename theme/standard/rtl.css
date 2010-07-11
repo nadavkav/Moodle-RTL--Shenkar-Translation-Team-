@@ -632,3 +632,10 @@ direction:ltr;
 direction:ltr;
 }
 
+/* TAG manager page */
+body#tag-manage table#tag-management-list td,
+body#tag-manage table#tag-management-list th,
+body#user-index table#participants td,
+body#user-index table#participants th {
+text-align:right;
+}
