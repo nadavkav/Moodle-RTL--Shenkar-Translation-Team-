@@ -47,15 +47,22 @@
     $strweek  = get_string('week');
     $strtopic  = get_string('topic');
 
+    // Table alignment for RTL mode
+    if (right_to_left()) {
+        $alignment = 'RIGHT';
+    } else {
+        $alignment = 'LEFT';
+    }
+
     if ($course->format == "weeks") {
         $table->head  = array ($strweek, $strname, $strsummary, $strtype, $strlastmodified);
-        $table->align = array ('CENTER', 'LEFT', 'LEFT', 'LEFT', 'LEFT');
+        $table->align = array ('CENTER', $alignment, $alignment, $alignment, $alignment);
     } else if ($course->format == "topics") {
         $table->head  = array ($strtopic, $strname, $strsummary, $strtype, $strlastmodified);
-        $table->align = array ('CENTER', 'LEFT', 'LEFT', 'LEFT', 'LEFT');
+        $table->align = array ('CENTER', $alignment, $alignment, $alignment, $alignment);
     } else {
         $table->head  = array ($strname, $strsummary, $strtype, $strlastmodified);
-        $table->align = array ('LEFT', 'LEFT', 'LEFT', 'LEFT');
+        $table->align = array ($alignment, $alignment, $alignment, $alignment);
     }
 
     foreach ($wikis as $wiki) {
