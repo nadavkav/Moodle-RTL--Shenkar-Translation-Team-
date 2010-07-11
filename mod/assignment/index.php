@@ -34,17 +34,24 @@
         die;
     }
 
+    // Table alignment for RTL mode
+    if (right_to_left()) {
+        $alignment = 'left';
+    } else {
+        $alignment = 'right';
+    }
+
     $timenow = time();
 
     if ($course->format == "weeks") {
         $table->head  = array ($strweek, $strname, $strassignmenttype, $strduedate, $strsubmitted, $strgrade);
-        $table->align = array ("center", "left", "left", "left", "right");
+        $table->align = array ("center", $alignment, $alignment, $alignment, $alignment);
     } else if ($course->format == "topics") {
         $table->head  = array ($strtopic, $strname, $strassignmenttype, $strduedate, $strsubmitted, $strgrade);
-        $table->align = array ("center", "left", "left", "left", "right");
+        $table->align = array ("center", $alignment, $alignment, $alignment, $alignment);
     } else {
         $table->head  = array ($strname, $strassignmenttype, $strduedate, $strsubmitted, $strgrade);
-        $table->align = array ("left", "left", "left", "right");
+        $table->align = array ($alignment, $alignment, $alignment, $alignment);
     }
 
     $currentsection = "";
