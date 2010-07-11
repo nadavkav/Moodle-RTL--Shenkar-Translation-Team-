@@ -644,3 +644,8 @@ text-align:right;
 #calendar .sideblock h2 {
 text-align:right;
 }
+
+/* Quiz analysis report */
+#mod-quiz-report table#itemanalysis .header  {
+text-align:right;
+}
