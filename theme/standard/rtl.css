@@ -654,3 +654,9 @@ text-align:right;
 .navigation option {
 text-align:right;
 }
+
+/*  Instant Message popup window - Display all TABs in one line */
+#message-index .tabrow0 LI {
+background:url("pix/tab/rtlbg-short.png") no-repeat scroll left top transparent;
+width:95px;
+}
