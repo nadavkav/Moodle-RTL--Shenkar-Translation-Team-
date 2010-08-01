@@ -670,3 +670,9 @@ padding-bottom:20px;
 width:20%;
 }
 
+/*  USER Profile - left align all english only fields : email, url... */
+#user-editadvanced #id_email,
+#user-editadvanced #id_url {
+direction:ltr;
+}
+
