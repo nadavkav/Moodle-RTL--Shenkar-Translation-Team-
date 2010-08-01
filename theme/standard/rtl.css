@@ -660,3 +660,13 @@ text-align:right;
 background:url("pix/tab/rtlbg-short.png") no-repeat scroll left top transparent;
 width:95px;
 }
+
+/*  RSS Block - alignment fix */
+#rss_client .blockconfigtable td.value {
+text-align:right;
+}
+#rss_client .blockconfigtable td.label {
+padding-bottom:20px;
+width:20%;
+}
+
