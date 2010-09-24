@@ -676,3 +676,10 @@ width:20%;
 direction:ltr;
 }
 
+/* fix "Single Discussion" forum type alignment in Forum module  */
+#mod-forum-view .subscription {
+border:2px groove;
+float:left;
+margin:5px 0;
+padding:5px;
+}
