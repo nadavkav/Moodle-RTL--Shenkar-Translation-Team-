@@ -93,8 +93,13 @@ if (!empty($file)) {
             // Now, try to include the help text from this file, if we can.
             if (file_exists_and_readable($filepath)) {
                 $helpfound = true;
-                @include($filepath);   // The actual helpfile
-
+                if ($forcelang == 'en_utf8') { // force ltr alignment for english help
+                  echo '<style> body, td, li, div ,h1 { direction:ltr!important;text-align:left!important; } </style>';
+                  @include($filepath);   // The actual helpfile
+                  //echo '</div>';
+                } else {
+                  @include($filepath);   // The actual helpfile
+                }
                 // Now, we process some special cases.
                 $helpdir = $locationprefix.$lang.'/help';
                 if ($module == 'moodle' and ($file == 'index.html' or $file == 'mods.html')) {
