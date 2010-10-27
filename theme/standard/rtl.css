@@ -683,3 +683,18 @@ float:left;
 margin:5px 0;
 padding:5px;
 }
+
+/*  block - online users . fix alignment of users and evenvelop icons */
+.block_online_users .listentry div.message,
+.block_messages .listentry div.message {
+    float: left;
+}
+.block_online_users .listentry div.user,
+.block_messages .listentry div.user {
+    float: right;
+}
+
+/*  blocks : activities , my courses, admin. fix alignments of icons */
+.sideblock div.column.c0 {
+    float: right;
+}
