@@ -127,7 +127,7 @@ form.mform .fitemtitle {
 }
 
 form.mform fieldset .advancedbutton {
-    text-align: left;
+    text-align: right;
 }
 
 form.mform .fdescription.required {
@@ -549,9 +549,10 @@ padding-left:7px;
 padding-right:7px;
 }
 
-/* emphsize the summary section when in editing mode */
-#course-view .section td.content .summary {
-background-color:#F2FEF2;
+/* Emphasize the summary section when in editing mode */
+.editing .section td.content .summary {
+/* background-color:#F2FEF2; */
+ border: 1px dashed;
 }
 
 #mod-resource-mod #id_reference_value {
@@ -684,3 +685,19 @@ margin:5px 0;
 padding:5px;
 }
 
+/*  fix for an off screen display of "you are here" redundant text and horizontal scroll bar */
+h2.accesshide {
+  display: none;
+}
+
+/*  align Online usernames to the right */
+.block_online_users .listentry div.user,
+.block_messages .listentry div.user {
+    float: right;
+}
+
+/* Align all INPUT textboxes that show URLs to the left */
+input[value*="http://"] {
+text-align:left;
+direction:ltr;
+}
